@@ -14,10 +14,10 @@ public class LocacaoView {
     private LocacaoController locacaoController;
     private VeiculoController veiculoController;
 
-    public LocacaoView(Scanner scanner) {
+    public LocacaoView(Scanner scanner, VeiculoController veiculoController) {
         this.scanner = scanner;
         this.locacaoController = new LocacaoController();
-        this.veiculoController = new VeiculoController();
+        this.veiculoController = veiculoController; // Recebe a memória central!
     }
 
     public void exibirMenuLocacao() {
@@ -57,12 +57,13 @@ public class LocacaoView {
         Locacao locacao = new Locacao(novoId, clienteTeste, funcTeste, veiculoEscolhido, dias);
 
         locacaoController.registrarLocacao(locacao);
+        veiculoController.atualizarStatusVeiculo(veiculoEscolhido.getPlaca(), false);
 
         System.out.println("Locação cadastrada com sucesso! Valor Total a pagar: R$ " + locacao.getValorTotal());
     }
 
     public void listarLocacoes() {
-        System.out.println("\n--- RELATÓRIO ENVOLVENDO MÚLTIPLAS CLASSES ---");
+        System.out.println("\n--- RELATÓRIO DE LOCAÇÕES ---");
         List<Locacao> locacoes = locacaoController.listarLocacoes();
         if (locacoes.isEmpty()) {
             System.out.println("Nenhuma locação cadastrada.");
