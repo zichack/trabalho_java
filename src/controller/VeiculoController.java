@@ -24,14 +24,62 @@ public class VeiculoController {
     }
 
     // ==========================================
+    // MÉTODOS DE EDIÇÃO E EXCLUSÃO
+    // ==========================================
+
+    // metodo para buscar veiculo por placa
+    public Veiculo buscarPorPlaca(String placa) {
+        for (Veiculo v : listaVeiculos) {
+            if (v.getPlaca().equalsIgnoreCase(placa)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    // metodo para alterar valor da diaria
+    public boolean editarVeiculo(String placa, double novoValorDiaria) {
+        Veiculo v = buscarPorPlaca(placa);
+        if (v != null) {
+            v.setValorBaseDiaria(novoValorDiaria);
+            salvarDados();
+            return true;
+        }
+        return false;
+    }
+
+    // metodo para excluir veiculo, com validacao para não excluir veiculo alugado
+    public boolean excluirVeiculo(String placa) {
+        Veiculo v = buscarPorPlaca(placa);
+        if (v != null) {
+            // regra para não excluir veiculo alugado
+            if (!v.isDisponivel()) {
+                return false;
+            }
+            listaVeiculos.remove(v);
+            salvarDados();
+            return true;
+        }
+        return false;
+    }
+
+    public void atualizarStatusVeiculo(String placa, boolean disponivel) {
+        Veiculo v = buscarPorPlaca(placa);
+        if (v != null) {
+            v.setDisponivel(disponivel);
+            salvarDados();
+        }
+    }
+
+    // ==========================================
     // PERSISTÊNCIA DE DADOS (SERIALIZAÇÃO)
     // ==========================================
-    
+
     private void salvarDados() {
         // verifica se a pasta 'arquivos' existe, se nao, cria
         File diretorio = new File("arquivos");
         if (!diretorio.exists()) {
-            diretorio.mkdirs(); 
+            diretorio.mkdirs();
         }
 
         // grava a lista de veiculos no arquivo
